@@ -8,7 +8,7 @@ const cors = require('cors')
 app.use(cors())
 app.use(express.json())
 app.get('/', (req, res) => {
-    res.send('food delivery running')
+    res.send('courier running')
 })
 
 
@@ -48,6 +48,30 @@ async function run() {
             const order = req.body
             const result = await orderCollection.insertOne(order)
             console.log('hittin service', order)
+            res.json(result)
+        })
+
+        // get order
+        app.get('/orders', async (req, res) => {
+            const cursor = orderCollection.find({})
+            const order = await cursor.toArray()
+            res.send(order)
+        })
+
+        // add service
+        app.post('/services', async (req, res) => {
+            const service = req.body
+            const result = await courierCollection.insertOne(service)
+            console.log('hittin service', service)
+            res.json(result)
+        })
+
+        // delete order
+        app.delete('/orders/:id', async (req, res) => {
+            const id = req.params.id
+            const query = { _id: ObjectId(id) }
+            const result = await orderCollection.deleteOne(query)
+            console.log('deleting user with id', result);
             res.json(result)
         })
 
