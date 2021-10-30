@@ -36,7 +36,7 @@ async function run() {
             const agents = await cursor.toArray()
             res.send(agents)
         })
-        // get deliventure
+        // get deliventure using get method
         app.get('/deliventure', async (req, res) => {
             const cursor = deliventureCollection.find({})
             const deliventure = await cursor.toArray()
