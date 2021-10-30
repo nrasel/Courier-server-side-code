@@ -23,6 +23,7 @@ async function run() {
         const courierCollection = database.collection("courier");
         const agentCollection = database.collection("agent")
         const deliventureCollection = database.collection("deliventure")
+        const orderCollection = database.collection("order")
 
         // get services
         app.get('/services', async (req, res) => {
@@ -41,6 +42,13 @@ async function run() {
             const cursor = deliventureCollection.find({})
             const deliventure = await cursor.toArray()
             res.send(deliventure)
+        })
+        // post details
+        app.post('/order', async (req, res) => {
+            const order = req.body
+            const result = await orderCollection.insertOne(order)
+            console.log('hittin service', order)
+            res.json(result)
         })
 
     } finally {
