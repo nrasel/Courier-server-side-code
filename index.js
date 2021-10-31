@@ -24,12 +24,20 @@ async function run() {
         const agentCollection = database.collection("agent")
         const deliventureCollection = database.collection("deliventure")
         const orderCollection = database.collection("order")
+        const pricingCollection = database.collection("pricing")
 
         // get services
         app.get('/services', async (req, res) => {
             const cursor = courierCollection.find({})
             const services = await cursor.toArray()
             res.send(services)
+        })
+
+        // get pricing
+        app.get('/pricing', async (req, res) => {
+            const cursor = pricingCollection.find({})
+            const pricing = await cursor.toArray()
+            res.send(pricing)
         })
 
         // get service
@@ -84,17 +92,15 @@ async function run() {
         })
 
         // update orders
-        app.put('/orders', async (req, res) => {
-            // const id = req.params.id
-            // const query = { _id: ObjectId(id) }
-            const updateService = req.body
-            const options = { upsert: true }
-            const updateDocs = {
+        app.put('/orders/:id', async (req, res) => {
+            const id = req.params.id
+            const filter = { _id: ObjectId(id) }
+            const updateStatus = {
                 $set: {
-                    status: updateService.status
+                    status: "Approved"
                 },
             }
-            const result = await orderCollection.updateOne(query, options, updateDocs)
+            const result = await orderCollection.updateOne(filter, updateStatus)
             res.send(result)
         })
 
