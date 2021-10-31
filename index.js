@@ -31,6 +31,14 @@ async function run() {
             const services = await cursor.toArray()
             res.send(services)
         })
+
+        // get service
+        app.get('/services/:id', async (req, res) => {
+            const id = req.params.id
+            const query = { _id: ObjectId(id) }
+            const result = await courierCollection.findOne(query)
+            res.send(result)
+        })
         // get agent collection 
         app.get('/agents', async (req, res) => {
             const cursor = agentCollection.find({})
@@ -73,6 +81,21 @@ async function run() {
             const result = await orderCollection.deleteOne(query)
             console.log('deleting user with id', result);
             res.json(result)
+        })
+
+        // update orders
+        app.put('/orders', async (req, res) => {
+            // const id = req.params.id
+            // const query = { _id: ObjectId(id) }
+            const updateService = req.body
+            const options = { upsert: true }
+            const updateDocs = {
+                $set: {
+                    status: updateService.status
+                },
+            }
+            const result = await orderCollection.updateOne(query, options, updateDocs)
+            res.send(result)
         })
 
     } finally {
